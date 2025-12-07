@@ -2,7 +2,7 @@
 
 A modern, full-stack task management system built with Next.js (frontend), Node.js + Express (backend), MongoDB Atlas, OTP-based authentication, JWT token system, task scheduling, email reminders, CSV export, and real-time updates using Socket.io.
 
-This is a modern full-stack task management system built using:
+Tech Stack Used:
 
 - **Next.js (Frontend)**
 - **Node.js + Express (Backend)**
