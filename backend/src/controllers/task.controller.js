@@ -3,10 +3,7 @@ import { sendTaskCreatedEmail } from "../services/email.service.js";
 import { parseIncomingDateAsUTC, toISTString } from "../utils/datetime.js";
 import { Parser } from "json2csv";
 
-/**
- * Helper: convert a Task mongoose doc (or plain object) to a plain object
- * and attach IST display fields.
- */
+
 function attachISTFields(taskDoc) {
   if (!taskDoc) return taskDoc;
   const t = typeof taskDoc.toObject === "function" ? taskDoc.toObject() : { ...taskDoc };
@@ -14,7 +11,7 @@ function attachISTFields(taskDoc) {
   t.dueDateDisplay = toISTString(t.dueDate);
   t.createdAtIST = toISTString(t.createdAt, { includeOffsetIso: true });
   t.updatedAtIST = toISTString(t.updatedAt, { includeOffsetIso: true });
-  // ensure tags/project exist for front-end
+  
   t.tags = t.tags || [];
   t.project = t.project || "";
   t.completed = !!t.completed;
@@ -27,7 +24,7 @@ export const createTask = async (req, res) => {
     const { title, description, dueDate, priority, reminderOffsetMinutes, tags, project } = req.body;
     if (!title) return res.status(400).json({ ok: false, error: "title required" });
 
-    // Parse incoming dueDate (assumed ISO or IST ISO) into a UTC JS Date for storage
+    
     const dueDateUtc = dueDate ? parseIncomingDateAsUTC(dueDate) : null;
     if (dueDate && !dueDateUtc) {
       return res.status(400).json({ ok: false, error: "Invalid dueDate format. Use ISO or 'yyyy-MM-dd HH:mm'." });
@@ -46,7 +43,7 @@ export const createTask = async (req, res) => {
       createdBy: req.user._id,
     });
 
-    // send task-created email (async)
+    // send task-created email
     sendTaskCreatedEmail(req.user.email, task).catch((e) => console.error("Task email error", e));
 
     const taskObj = attachISTFields(task);
@@ -57,7 +54,7 @@ export const createTask = async (req, res) => {
   }
 };
 
-// (listTasks, getTask unchanged except attachISTFields used below)
+
 
 export const listTasks = async (req, res) => {
   try {
@@ -65,7 +62,7 @@ export const listTasks = async (req, res) => {
     const filter = { userId: req.user._id };
     if (status) filter.status = status;
     if (q) {
-      // search title OR description
+      
       filter.$or = [
         { title: { $regex: q, $options: "i" } },
         { description: { $regex: q, $options: "i" } },
@@ -109,9 +106,9 @@ export const updateTask = async (req, res) => {
       updates.dueDate = dueDateUtc;
     }
 
-    // normalize tags/project if present
+    
     if (updates.tags && !Array.isArray(updates.tags)) {
-      // attempt to coerce comma separated string
+      
       if (typeof updates.tags === "string") {
         updates.tags = updates.tags.split(",").map((s) => s.trim()).filter(Boolean);
       } else {
@@ -149,7 +146,7 @@ export const deleteTask = async (req, res) => {
   }
 };
 
-// CSV export remains unchanged
+
 export const exportTasksCsv = async (req, res) => {
   try {
     const tasksRaw = await Task.find({ userId: req.user._id }).lean();
