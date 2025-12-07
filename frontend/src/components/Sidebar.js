@@ -19,7 +19,6 @@ const NavItem = ({ href, icon: Icon, children, selected }) => (
       "flex items-center gap-3 px-3 py-2 rounded-lg",
       selected ? "pill-selected" : "hover:bg-gray-100 dark:hover:bg-gray-800"
     )}
-    aria-current={selected ? "page" : undefined}
   >
     <span className="text-lg"><Icon /></span>
     <span className="font-medium">{children}</span>
@@ -58,20 +57,20 @@ export default function Sidebar() {
 
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
-  const translateClass = isSidebarOpen
-    ? "translate-x-0"
-    : "-translate-x-full";
+  // MAIN TRANSFORM LOGIC
+  const translateClass = isSidebarOpen ? "translate-x-0" : "-translate-x-full";
 
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks)) return [];
-    const set = new Set();
+    const s = new Set();
     return tasks
       .map((t) => (t.project || "").trim())
-      .filter((p) => p && !set.has(p) && set.add(p));
+      .filter((p) => p && !s.has(p) && s.add(p));
   }, [tasks]);
 
   return (
     <>
+      {/* Overlay */}
       {mounted && (
         <div
           onClick={() => showOverlay && closeSidebar()}
@@ -84,7 +83,7 @@ export default function Sidebar() {
         />
       )}
 
-      
+      {/* SIDEBAR */}
       <aside
         className={classNames(
           "fixed left-0 top-0 h-screen w-72 p-4",
@@ -93,7 +92,7 @@ export default function Sidebar() {
           translateClass
         )}
       >
-        {/* Mobile close button */}
+        {/* Close Button (mobile only) */}
         <button
           onClick={closeSidebar}
           aria-label="Close sidebar"
@@ -135,10 +134,7 @@ export default function Sidebar() {
                       query.project === p ? "pill-selected" : ""
                     )}
                   >
-                    <span
-                      className="w-3 h-3 rounded-full"
-                      style={{ background: "#a78bfa" }}
-                    />
+                    <span className="w-3 h-3 rounded-full" style={{ background: "#a78bfa" }} />
                     <span className="truncate">{p}</span>
                   </Link>
                 ))
