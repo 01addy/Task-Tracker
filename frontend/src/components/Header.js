@@ -34,7 +34,15 @@ export default function Header() {
         <button
           type="button"
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-          onClick={() => toggleSidebar()}
+          onClick={() => {
+            try {
+              toggleSidebar();
+            }  catch (e) {
+            try { openSidebar(); } catch (e) {}
+              }
+
+            try { window.dispatchEvent(new CustomEvent("tt:sidebarToggle")); } catch (e) {}
+          }}
           aria-label="Toggle menu"
           title="Toggle menu"
         >
