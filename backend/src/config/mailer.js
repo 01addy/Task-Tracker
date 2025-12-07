@@ -12,12 +12,11 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
-transporter
-  .verify()
+transporter.verify()
   .then(() => console.log("Mailer Verified Successfully"))
   .catch((err) => {
     console.error("Mailer Verification Failed:", err.message);
-    process.exit(1);
   });
+
 
 export default transporter;
