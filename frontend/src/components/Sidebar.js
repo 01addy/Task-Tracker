@@ -41,7 +41,6 @@ export default function Sidebar() {
     const onResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      // open on desktop by default, close on mobile by default
       if (mobile) {
         closeSidebar();
       } else {
@@ -64,9 +63,6 @@ export default function Sidebar() {
 
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
-  // visibility controlled by isSidebarOpen for all breakpoints
-  const translateClass = mounted ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "-translate-x-full";
-
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks) || tasks.length === 0) return [];
     const seen = new Set();
@@ -82,6 +78,20 @@ export default function Sidebar() {
     return list;
   }, [tasks]);
 
+  // Inline styles to avoid Tailwind class-purge / ordering issues
+  const sidebarWidth = 288; // 72 * 4 = 288px (w-72)
+  const transformStyle = isSidebarOpen ? "translateX(0)" : `translateX(-${sidebarWidth}px)`;
+  const topStyle = isMobile ? 0 : 48; // header height approx 3rem = 48px
+  const heightStyle = isMobile ? "100vh" : "calc(100vh - 48px)";
+  const asideStyle = {
+    transform: transformStyle,
+    transition: "transform 280ms ease-in-out",
+    left: 0,
+    top: topStyle,
+    height: heightStyle,
+    width: sidebarWidth,
+  };
+
   return (
     <>
       {/* overlay (mobile only) */}
@@ -91,20 +101,20 @@ export default function Sidebar() {
             if (showOverlay) closeSidebar();
           }}
           className={classNames(
-            "fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ease-in-out md:hidden",
-            { "opacity-100 pointer-events-auto": showOverlay, "opacity-0 pointer-events-none": !showOverlay }
+            "fixed inset-0 bg-black/30 transition-opacity duration-300 ease-in-out md:hidden",
+            { "opacity-100 pointer-events-auto z-40": showOverlay, "opacity-0 pointer-events-none": !showOverlay }
           )}
           aria-hidden={!showOverlay}
         />
       )}
 
-      {/* Sidebar: top-0 on mobile, below header on md+ */}
       <aside
+        // using inline style for transform/top/height to make behaviour deterministic
+        style={asideStyle}
         className={classNames(
-          // fixed sidebar that slides via transform; on md it sits below header (md:top-12)
-          "fixed left-0 h-[100vh] w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-50 transform transition-transform duration-300 ease-in-out will-change-transform",
-          "top-0 md:top-12 md:h-[calc(100vh-3rem)]",
-          translateClass
+          "fixed bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 shadow z-50 p-4 will-change-transform",
+          // ensure desktop sees the sidebar area (no md:translate forcing)
+          "md:block"
         )}
         aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
