@@ -20,7 +20,7 @@ export default function TodayPage() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetchTasks(); // populate store
+    fetchTasks(); 
   }, [fetchTasks]);
 
   const handleToggle = async (task) => {
@@ -31,14 +31,14 @@ export default function TodayPage() {
     }
   };
 
-  // filter tasks due today in IST
+  
   const todayStart = dayjs().tz(IST).startOf("day");
   const todayEnd = dayjs().tz(IST).endOf("day");
 
   const todays = (tasks || []).filter((t) => {
     if (!t.dueDate) return false;
     const d = dayjs(t.dueDate).tz(IST);
-    // using dayjs isBetween plugin; inclusive of bounds
+    
     return d.isBetween(todayStart, todayEnd, null, "[]");
   });
 
