@@ -1,4 +1,3 @@
-// src/config/mailer.js
 import nodemailer from "nodemailer";
 import env from "./env.js";
 
@@ -10,13 +9,16 @@ export const transporter = nodemailer.createTransport({
     user: env.smtp.user,
     pass: env.smtp.pass,
   },
+  connectionTimeout: 5000,
+  greetingTimeout: 5000,
+  socketTimeout: 5000,
 });
 
-transporter.verify()
+transporter
+  .verify()
   .then(() => console.log("Mailer Verified Successfully"))
   .catch((err) => {
-    console.error("Mailer Verification Failed:", err.message);
+    console.error("Mailer Verification Failed:", err?.message || err);
   });
-
 
 export default transporter;
