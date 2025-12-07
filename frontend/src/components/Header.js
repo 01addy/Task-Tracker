@@ -36,8 +36,32 @@ export default function Header() {
           type="button"
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => {
-            toggleSidebar(); 
-            window.dispatchEvent(new CustomEvent("tasktracker:openSidebar"));
+            // DEBUG: log click + toggle + store preview
+            try {
+              console.log("[DEBUG] Header hamburger clicked - before toggle");
+            } catch (e) {}
+
+            try {
+              toggleSidebar();
+              console.log("[DEBUG] toggleSidebar() called.");
+            } catch (e) {
+              console.error("[DEBUG] toggleSidebar() threw:", e);
+            }
+
+            try {
+              // Zustand hook function exposes getState
+              const st = typeof useUiStore.getState === "function" ? useUiStore.getState() : null;
+              console.log("[DEBUG] store state after toggle:", st);
+            } catch (e) {
+              console.warn("[DEBUG] cannot read store.getState()", e);
+            }
+
+            try {
+              window.dispatchEvent(new CustomEvent("tasktracker:openSidebar"));
+              console.log("[DEBUG] dispatched event tasktracker:openSidebar");
+            } catch (e) {
+              console.warn("[DEBUG] dispatch event failed", e);
+            }
           }}
           aria-label="Toggle menu"
           title="Toggle menu"
