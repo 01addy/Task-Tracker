@@ -65,6 +65,14 @@ export default function Sidebar() {
       .filter((p) => p && !seen.has(p) && seen.add(p));
   }, [tasks]);
 
+  // MOBILE-ONLY inline style override to guarantee visibility (does not affect desktop)
+  const mobileInlineStyle = isMobile
+    ? {
+        transform: isSidebarOpen ? "translateX(0)" : "translateX(-100%)",
+        transition: "transform 300ms ease-in-out",
+      }
+    : undefined;
+
   return (
     <>
       {/* Overlay (mobile only) */}
@@ -81,11 +89,15 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
+        // apply mobile inline style only when in mobile mode; desktop uses Tailwind transform classes normally
+        style={mobileInlineStyle}
         className={classNames(
           "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-50 transform transition-transform duration-300 ease-in-out",
+          // keep translate classes so desktop still animates via Tailwind; mobileInlineStyle will override when isMobile
           translateClass,
           "md:top-12 md:h-[calc(100vh-3rem)]"
         )}
+        aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
         {/* Mobile close button */}
         <button
