@@ -2,8 +2,7 @@
 import axios from "axios";
 import { getAccessToken, setAccessToken, clearAccessToken } from "./auth";
 
-// base should point to server root (no trailing /api)
-// calls use /api/... paths so they resolve to `${API_BASE}/api/...`
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://task-tracker-3eze.onrender.com";
 
 const api = axios.create({
@@ -14,7 +13,7 @@ const api = axios.create({
   },
 });
 
-// Attach access token to outgoing requests
+
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -39,7 +38,7 @@ api.interceptors.response.use(
 
     if (!err.response) return Promise.reject(err);
 
-    // Only handle 401 once per request
+    
     if (err.response.status !== 401 || originalRequest._retry) {
       return Promise.reject(err);
     }
@@ -47,7 +46,7 @@ api.interceptors.response.use(
     originalRequest._retry = true;
 
     if (isRefreshing) {
-      // queue requests while refresh is in flight
+      
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       })
@@ -61,7 +60,7 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // call refresh endpoint (full absolute URL). API_BASE does not include /api so append it.
+      
       const resp = await axios.post(
         `${API_BASE}/api/auth/refresh`,
         {},
@@ -70,7 +69,7 @@ api.interceptors.response.use(
 
       const newAccessToken = resp.data.accessToken;
 
-      // store and update headers
+      
       setAccessToken(newAccessToken);
       api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
 
