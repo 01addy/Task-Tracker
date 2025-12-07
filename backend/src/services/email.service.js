@@ -1,4 +1,3 @@
-// src/services/email.service.js
 import transporter from "../config/mailer.js";
 import EmailLog from "../models/EmailLog.model.js";
 import env from "../config/env.js";
@@ -13,24 +12,24 @@ const sendMail = async ({ to, subject, text, html, type = "other", meta = {} }) 
       html,
     });
 
-    await EmailLog.create({
+    EmailLog.create({
       to,
       subject,
       type,
       messageId: info.messageId,
       meta,
-    });
+    }).catch((e) => console.error("EmailLog create error:", e));
 
     return { ok: true, info };
   } catch (err) {
-    await EmailLog.create({
+    EmailLog.create({
       to,
       subject,
       type,
-      error: err.message,
+      error: err?.message || String(err),
       meta,
-    });
-    return { ok: false, error: err.message };
+    }).catch((e) => console.error("EmailLog create error:", e));
+    return { ok: false, error: err?.message || String(err) };
   }
 };
 
