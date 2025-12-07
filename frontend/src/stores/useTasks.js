@@ -6,12 +6,12 @@ export const useTasks = create((set, get) => ({
   tasks: [],
   loading: false,
 
-  // fetch list (expects server: { ok, total, page, limit, tasks })
+  
   fetchTasks: async (opts = {}) => {
     set({ loading: true });
     try {
       const { data } = await api.get("/api/tasks", { params: opts });
-      // normalize to array
+      
       const tasks = data?.tasks ?? (Array.isArray(data) ? data : []);
       set({ tasks });
       return data;
@@ -23,7 +23,7 @@ export const useTasks = create((set, get) => ({
     }
   },
 
-  // createTask: optimistic update, then reconcile using resp.data.task
+  
   createTask: async (payload) => {
     if (!payload || !payload.title) {
       const err = new Error("Title is required");
@@ -34,7 +34,7 @@ export const useTasks = create((set, get) => ({
     const tempId = "temp-" + Math.random().toString(36).slice(2, 9);
     const optimistic = { ...payload, _id: tempId, createdAt: new Date().toISOString() };
 
-    // optimistic add
+    
     set((s) => ({ tasks: [optimistic, ...s.tasks] }));
 
     try {
@@ -42,14 +42,14 @@ export const useTasks = create((set, get) => ({
       const resp = await api.post("/api/tasks", payload);
       console.log("[useTasks.createTask] resp:", resp?.data);
 
-      // server wraps task: { ok: true, task: {...} }
+      
       const serverTask = resp?.data?.task ?? resp?.data;
       if (!serverTask) {
-        // unexpected shape
+        
         throw new Error("Invalid server response");
       }
 
-      // replace optimistic item with real task
+     
       set((s) => ({
         tasks: s.tasks.map((t) => (t._id === tempId ? serverTask : t)),
       }));
@@ -57,10 +57,10 @@ export const useTasks = create((set, get) => ({
       return serverTask;
     } catch (err) {
       console.error("[useTasks.createTask] error:", err?.response ?? err);
-      // rollback optimistic entry
+     
       set((s) => ({ tasks: s.tasks.filter((t) => t._id !== tempId) }));
 
-      // rethrow so UI can toast with server message
+      
       const message = err?.response?.data?.error || err?.message || "Create failed";
       const e = new Error(message);
       e.original = err;
