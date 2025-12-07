@@ -88,7 +88,7 @@ export default function Sidebar() {
       {/* SIDEBAR */}
       <aside
         className={classNames(
-          "fixed left-0 top-0 h-screen w-72 p-4",
+          "fixed left-0 top-12 h-[calc(100vh-3rem)] w-72 p-4",
           "bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800",
           "z-[9999] transform transition-transform duration-300 ease-in-out will-change-transform",
           translateClass
