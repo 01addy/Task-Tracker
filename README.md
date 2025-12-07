@@ -2,6 +2,8 @@
 
 A modern, full-stack task management system built with Next.js (frontend), Node.js + Express (backend), MongoDB Atlas, OTP-based authentication, JWT token system, task scheduling, email reminders, CSV export, and real-time updates using Socket.io.
 
+Website URL - https://task-tracker-five-blush.vercel.app/
+
 Tech Stack Used:
 
 - **Next.js (Frontend)**
