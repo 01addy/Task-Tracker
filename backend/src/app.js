@@ -10,6 +10,8 @@ import { transporter } from "./config/mailer.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(helmet());
 
 const rawOrigins = process.env.CLIENT_ORIGIN || "http://localhost:3000";
@@ -20,7 +22,7 @@ app.use(
     origin: (origin, cb) => {
       if (!origin) return cb(null, true);
       if (allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error(`CORS policy does not allow origin ${origin}`), false);
+      return cb(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
