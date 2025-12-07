@@ -61,13 +61,26 @@ export default function Header() {
               {user.name ? user.name.split(" ").map(n => n[0]).slice(0,2).join("") : (user.email ? user.email[0].toUpperCase() : "U")}
             </div>
             <button
-              onClick={async () => { await logout(); router.replace("/login"); }}
-              className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100 hover:underline whitespace-nowrap"
-              aria-label="Logout"
+              type="button"
+              className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 z-60"
+              onClick={() => {
+                const openFn = openSidebar || toggleSidebar || (() => {});
+                try {
+                  openFn();
+                } catch (e) {
+      
+                  window.dispatchEvent(new CustomEvent("tasktracker:openSidebar"));
+                }
+                try {
+                  document.body.classList.add("mobile-menu-open");
+                } catch (e) {}
+              }}
+              aria-label="Toggle menu"
+              title="Toggle menu"
             >
-              <FiLogOut className="w-5 h-5 text-gray-700 dark:text-gray-100" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
+              <HiOutlineMenu className="w-6 h-6 text-gray-700 dark:text-gray-100" />
+          </button>
+
           </div>
         ) : (
           <div style={{ width: 1 }} aria-hidden />
