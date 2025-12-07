@@ -18,11 +18,11 @@ import { validationResult } from "express-validator";
 
 const router = express.Router();
 
-// small helper middleware to send validation errors from express-validator
+
 const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // normalize errors
+   
     const mapped = errors.array().map((e) => ({ field: e.param, msg: e.msg }));
     return res.status(400).json({ ok: false, errors: mapped });
   }
