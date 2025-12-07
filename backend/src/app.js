@@ -7,7 +7,6 @@ import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import { transporter } from "./config/mailer.js";
-import { smtpTcpCheck } from "./debug/smtp-check.js";
 
 const app = express();
 
@@ -26,7 +25,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.get("/health", (req, res) => res.json({ ok: true, message: "Server running" }));
+app.get("/health", (req, res) => {
+  return res.json({ ok: true, message: "Server running" });
+});
 
 app.get("/test-mail", async (req, res) => {
   try {
@@ -36,12 +37,11 @@ app.get("/test-mail", async (req, res) => {
       subject: "Test mail from TaskTracker",
       text: "This is a test email from TaskTracker server."
     });
-    res.json({ ok: true, info });
+    return res.json({ ok: true, info });
   } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
+    return res.status(500).json({ ok: false, error: err.message });
   }
 });
-app.get("/debug/smtp-tcp", smtpTcpCheck);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
