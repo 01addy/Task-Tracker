@@ -28,7 +28,7 @@ export default function Header() {
   }, [router, closeSidebar]);
 
   return (
-    // header is sticky and kept above sidebar via z-50
+    
     <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="flex items-center gap-3">
         <button
