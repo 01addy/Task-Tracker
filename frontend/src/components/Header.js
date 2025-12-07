@@ -15,8 +15,8 @@ export default function Header() {
     logout: s.logout,
   }));
 
-  // toggleSidebar toggles open/close
   const toggleSidebar = useUiStore((s) => s.toggleSidebar);
+  const openSidebar = useUiStore((s) => s.openSidebar);
   const closeSidebar = useUiStore((s) => s.closeSidebar);
 
   const [mounted, setMounted] = useState(false);
@@ -29,19 +29,15 @@ export default function Header() {
   }, [router, closeSidebar]);
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-60">
+    <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="flex items-center gap-3">
+        {/* SINGLE hamburger button */}
         <button
           type="button"
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => {
-            try {
-              toggleSidebar();
-            }  catch (e) {
-            try { openSidebar(); } catch (e) {}
-              }
-
-            try { window.dispatchEvent(new CustomEvent("tt:sidebarToggle")); } catch (e) {}
+            toggleSidebar(); 
+            window.dispatchEvent(new CustomEvent("tasktracker:openSidebar"));
           }}
           aria-label="Toggle menu"
           title="Toggle menu"
@@ -53,7 +49,13 @@ export default function Header() {
           <div className="w-10 h-10 rounded-lg avatar-gradient flex items-center justify-center shadow-md">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               <rect x="3" y="3" width="18" height="18" rx="5" fill="white" />
-              <path d="M7 12l3 3 7-7" stroke="var(--accent-2)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M7 12l3 3 7-7"
+                stroke="var(--accent-2)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
 
@@ -67,11 +69,18 @@ export default function Header() {
         {mounted && isAuthenticated && user ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full avatar-gradient flex items-center justify-center text-white font-semibold shadow text-sm">
-              {user.name ? user.name.split(" ").map(n => n[0]).slice(0,2).join("") : (user.email ? user.email[0].toUpperCase() : "U")}
+              {user.name
+                ? user.name.split(" ").map((n) => n[0]).slice(0, 2).join("")
+                : user.email
+                ? user.email[0].toUpperCase()
+                : "U"}
             </div>
 
             <button
-              onClick={async () => { await logout(); router.replace("/login"); }}
+              onClick={async () => {
+                await logout();
+                router.replace("/login");
+              }}
               className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100 hover:underline whitespace-nowrap"
               aria-label="Logout"
             >
