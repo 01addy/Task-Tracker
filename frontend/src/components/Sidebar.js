@@ -41,7 +41,7 @@ export default function Sidebar() {
     const onResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      // open on desktop by default, close on mobile
+      // open on desktop by default, close on mobile by default
       if (mobile) {
         closeSidebar();
       } else {
@@ -53,7 +53,7 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", onResize);
   }, [openSidebar, closeSidebar]);
 
-  // fallback event listener so header can force-open the sidebar
+  // fallback event listener so header can force-open the sidebar (keeps compatibility)
   useEffect(() => {
     const handler = () => {
       if (typeof openSidebar === "function") openSidebar();
@@ -84,27 +84,31 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* overlay (mobile only) */}
       {mounted && (
         <div
           onClick={() => {
             if (showOverlay) closeSidebar();
           }}
           className={classNames(
-            "fixed inset-0 bg-black/30 z-30 transition-opacity duration-300 ease-in-out md:hidden",
+            "fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ease-in-out md:hidden",
             { "opacity-100 pointer-events-auto": showOverlay, "opacity-0 pointer-events-none": !showOverlay }
           )}
           aria-hidden={!showOverlay}
         />
       )}
 
+      {/* Sidebar: top-0 on mobile, below header on md+ */}
       <aside
         className={classNames(
-          // control visibility via transform for all sizes
-          "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-40 transform transition-transform duration-300 ease-in-out will-change-transform",
+          // fixed sidebar that slides via transform; on md it sits below header (md:top-12)
+          "fixed left-0 h-[100vh] w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-50 transform transition-transform duration-300 ease-in-out will-change-transform",
+          "top-0 md:top-12 md:h-[calc(100vh-3rem)]",
           translateClass
         )}
         aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
+        {/* mobile-only close button */}
         <button
           onClick={() => {
             if (typeof toggleSidebar === "function") {
@@ -116,7 +120,7 @@ export default function Sidebar() {
             }
           }}
           aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
-          className="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700 md:hidden focus:outline-none"
+          className="absolute top-3 right-3 z-60 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700 md:hidden focus:outline-none"
           title="Toggle sidebar"
         >
           <HiOutlineMenu className="w-5 h-5" />
