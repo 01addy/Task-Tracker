@@ -62,12 +62,14 @@ export default function Sidebar() {
 
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks)) return [];
-    const s = new Set();
-    return tasks
-      .map((t) => (t.project || "").trim())
-      .filter((p) => p && !s.has(p) && s.add(p));
-  }, [tasks]);
+    const projectList = tasks
+    .filter(t => t.project && typeof t.project === "string")
+    .map(t => t.project.trim())
+    .filter(p => p.length > 0);
 
+    return [...new Set(projectList)]; 
+  }, [tasks]);
+  
   return (
     <>
       {/* Overlay */}
