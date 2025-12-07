@@ -50,7 +50,6 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", onResize);
   }, [openSidebar]);
 
-  // Listen for fallback DOM event from Header in case store method naming differs
   useEffect(() => {
     const handler = () => {
       if (typeof openSidebar === "function") {
@@ -107,7 +106,6 @@ export default function Sidebar() {
       >
         <button
           onClick={() => {
-            // toggle on mobile; on desktop this button is hidden via md:hidden
             if (typeof toggleSidebar === "function") {
               toggleSidebar();
             } else if (typeof closeSidebar === "function" && isSidebarOpen) {
