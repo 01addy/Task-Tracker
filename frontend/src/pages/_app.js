@@ -1,4 +1,4 @@
-// inside src/pages/_app.js (replace the AuthInitializer from earlier)
+// src/pages/_app.js
 import "../styles/globals.css";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
@@ -17,7 +17,7 @@ function AuthInitializer({ children }) {
       try {
         const token = getAccessToken();
         if (!token) {
-          // ensure store is consistent on client
+          
           if (mounted) setUser(null);
           return;
         }
@@ -25,7 +25,7 @@ function AuthInitializer({ children }) {
         const { data } = await api.get("/api/auth/me");
         if (mounted) setUser(data?.user || null);
       } catch (e) {
-        // try once more silently (optional)
+        
         try {
           const { data } = await api.get("/api/auth/me");
           if (mounted) setUser(data?.user || null);
