@@ -115,21 +115,7 @@ input::placeholder, textarea::placeholder {
   outline-offset: 2px;
 }
 
-/* mobile overlay smoothed (sidebar rules) */
-@media (max-width: 768px) {
-  aside { display: none; }
-  body.mobile-menu-open aside {
-    display: block;
-    position: fixed;
-    z-index: 60;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 78%;
-    padding-top: 64px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), white);
-  }
-}
+
 
 /* auth backdrop + card */
 .auth-backdrop { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 60; pointer-events: auto; }
