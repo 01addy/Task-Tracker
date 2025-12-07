@@ -15,7 +15,7 @@ export default function Header() {
     logout: s.logout,
   }));
 
-  const toggleSidebar = useUiStore((s) => s.toggleSidebar);
+  const openSidebar = useUiStore((s) => s.openSidebar);
   const closeSidebar = useUiStore((s) => s.closeSidebar);
 
   const [mounted, setMounted] = useState(false);
@@ -28,12 +28,12 @@ export default function Header() {
   }, [router, closeSidebar]);
 
   return (
-    
     <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="flex items-center gap-3">
         <button
+          type="button"
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-          onClick={toggleSidebar}
+          onClick={() => openSidebar()}
           aria-label="Toggle menu"
           title="Toggle menu"
         >
@@ -62,9 +62,11 @@ export default function Header() {
             </div>
             <button
               onClick={async () => { await logout(); router.replace("/login"); }}
-              className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100 hover:underline"
+              className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100 hover:underline whitespace-nowrap"
+              aria-label="Logout"
             >
-              <FiLogOut className="w-5 h-5 text-gray-700 dark:text-gray-100" /> Logout
+              <FiLogOut className="w-5 h-5 text-gray-700 dark:text-gray-100" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         ) : (
