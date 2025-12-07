@@ -3,7 +3,7 @@ import axios from "axios";
 import { getAccessToken, setAccessToken, clearAccessToken } from "./auth";
 
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://task-tracker-3eze.onrender.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://task-tracker-nh2t.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE,
