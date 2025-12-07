@@ -50,9 +50,19 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", onResize);
   }, [openSidebar]);
 
+  // Listen for fallback DOM event from Header in case store method naming differs
+  useEffect(() => {
+    const handler = () => {
+      if (typeof openSidebar === "function") {
+        openSidebar();
+      }
+    };
+    window.addEventListener("tasktracker:openSidebar", handler);
+    return () => window.removeEventListener("tasktracker:openSidebar", handler);
+  }, [openSidebar]);
+
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
-  // translate logic: default hidden on mobile, visible on desktop
   const translateClass = mounted
     ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full")
     : "-translate-x-full";
@@ -76,7 +86,9 @@ export default function Sidebar() {
     <>
       {mounted && (
         <div
-          onClick={closeSidebar}
+          onClick={() => {
+            if (showOverlay) closeSidebar();
+          }}
           className={classNames(
             "fixed inset-0 bg-black/30 z-30 transition-opacity duration-300 ease-in-out md:hidden",
             { "opacity-100 pointer-events-auto": showOverlay, "opacity-0 pointer-events-none": !showOverlay }
@@ -94,7 +106,16 @@ export default function Sidebar() {
         aria-hidden={mounted ? (isMobile ? !isSidebarOpen : !isSidebarOpen) : undefined}
       >
         <button
-          onClick={toggleSidebar}
+          onClick={() => {
+            // toggle on mobile; on desktop this button is hidden via md:hidden
+            if (typeof toggleSidebar === "function") {
+              toggleSidebar();
+            } else if (typeof closeSidebar === "function" && isSidebarOpen) {
+              closeSidebar();
+            } else if (typeof openSidebar === "function" && !isSidebarOpen) {
+              openSidebar();
+            }
+          }}
           aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
           className="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700 md:hidden focus:outline-none"
           title="Toggle sidebar"
@@ -117,9 +138,7 @@ export default function Sidebar() {
 
             <div className="space-y-2">
               {projects.length === 0 ? (
-                <>
-                  <div className="text-sm text-gray-500">No projects yet</div>
-                </>
+                <div className="text-sm text-gray-500">No projects yet</div>
               ) : (
                 projects.map((p) => (
                   <Link
