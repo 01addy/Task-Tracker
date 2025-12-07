@@ -3,22 +3,15 @@ import cron from "node-cron";
 import Task from "../models/Task.model.js";
 import { sendTaskReminderEmail } from "../services/email.service.js";
 
-/**
- * Runs every 5 minutes and finds tasks that:
- * - have a dueDate
- * - are not done
- * - reminderSent === false
- * - and whose reminder time (dueDate - reminderOffsetMinutes) is <= now
- *
- * When a reminder is sent, it marks reminderSent = true to avoid duplicates.
- */
+// Runs every 5 minutes 
+
 export const startReminderJob = () => {
   cron.schedule("*/1 * * * *", async () => {
     try {
       const now = new Date();
 
-      // Look ahead a bit to capture tasks whose reminder window has opened
-      const lookAhead = new Date(now.getTime() + 1000 * 60 * 60 * 24); // 24 hours
+      
+      const lookAhead = new Date(now.getTime() + 1000 * 60 * 60 * 24); 
 
       const tasks = await Task.find({
         dueDate: { $ne: null, $gt: now, $lte: lookAhead },
