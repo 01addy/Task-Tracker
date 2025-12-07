@@ -12,7 +12,6 @@ Tech Stack Used:
 - **OTP-based authentication**
 - **JWT (Access + Refresh Tokens)**
 - **Email reminders**
-- **CSV export**
 - **Real-time updates (Socket.io)**
 
 This repository includes **both frontend and backend**, structured for clean development and ready for CI/CD deployment.
@@ -79,11 +78,9 @@ This repository includes **both frontend and backend**, structured for clean dev
 - MongoDB + Mongoose
 - OTP generation + secure verification
 - JWT authentication (access + refresh)
-- Email sending via Nodemailer
-- CSV export module
+- Email sending via SendGrid
 - Cron jobs for reminders
 - Winston-based logging
-- File upload ready (multer)
 - API built for scalability & reliability
 
 ---
@@ -132,13 +129,7 @@ PORT=4000
 
 MONGODB_URI=YOUR_MONGODB_ATLAS_URI
 
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your@gmail.com
-SMTP_PASS=YOUR_SMTP_APP_PASSWORD
-SMTP_FROM="TaskTracker <no-reply@yourdomain.com>"
-
+SENDGRID_API_KEY
 JWT_ACCESS_SECRET=SUPER_SECRET_ACCESS_KEY
 JWT_REFRESH_SECRET=SUPER_SECRET_REFRESH_KEY
 
@@ -237,8 +228,7 @@ npm run dev
 ---
 
 ## 👨‍💻 Author
-**Aditya**  
-Engineering Student — IMS Engineering College  
+**Aditya Pratap Singh**  
 Passionate about building production-ready applications.
 
 ---
