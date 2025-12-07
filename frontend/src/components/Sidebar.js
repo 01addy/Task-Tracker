@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { FaTasks, FaCalendarDay, FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa/index.js";
+import {
+  FaTasks,
+  FaCalendarDay,
+  FaRegCalendarAlt,
+  FaCheckCircle
+} from "react-icons/fa/index.js";
 import { HiOutlineMenu } from "react-icons/hi/index.js";
 import { useUiStore } from "../stores/useUiStore";
 import { useTasks } from "../stores/useTasks";
@@ -29,7 +34,6 @@ export default function Sidebar() {
   const isSidebarOpen = useUiStore((s) => s.isSidebarOpen);
   const openSidebar = useUiStore((s) => s.openSidebar);
   const closeSidebar = useUiStore((s) => s.closeSidebar);
-  const toggleSidebar = useUiStore((s) => s.toggleSidebar);
 
   const tasks = useTasks((s) => s.tasks);
 
@@ -39,71 +43,61 @@ export default function Sidebar() {
   useEffect(() => {
     setMounted(true);
 
-    const onResize = () => {
+    const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
 
-      // Desktop open, mobile closed by default
       if (mobile) closeSidebar();
       else openSidebar();
     };
 
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [openSidebar, closeSidebar]);
 
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
-  const translateClass = mounted ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "-translate-x-full";
+  const translateClass = isSidebarOpen
+    ? "translate-x-0"
+    : "-translate-x-full";
 
   const projects = React.useMemo(() => {
-    if (!Array.isArray(tasks) || tasks.length === 0) return [];
-    const seen = new Set();
+    if (!Array.isArray(tasks)) return [];
+    const set = new Set();
     return tasks
       .map((t) => (t.project || "").trim())
-      .filter((p) => p && !seen.has(p) && seen.add(p));
+      .filter((p) => p && !set.has(p) && set.add(p));
   }, [tasks]);
-
-  
-  const mobileInlineStyle = isMobile
-    ? {
-        transform: isSidebarOpen ? "translateX(0)" : "translateX(-100%)",
-        transition: "transform 300ms ease-in-out",
-      }
-    : undefined;
 
   return (
     <>
-      {/* Overlay (mobile only) */}
       {mounted && (
         <div
           onClick={() => showOverlay && closeSidebar()}
           className={classNames(
             "fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ease-in-out md:hidden",
-            showOverlay ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            showOverlay
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
           )}
-          aria-hidden={!showOverlay}
         />
       )}
 
-      {/* Sidebar */}
+      
       <aside
-        
-        style={mobileInlineStyle}
         className={classNames(
-          "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-[9999] transform transition-transform duration-300 ease-in-out",
-          
-          translateClass,
-          "md:top-12 md:h-[calc(100vh-3rem)]"
+          "fixed left-0 top-0 h-screen w-72 p-4",
+          "bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800",
+          "z-[9999] transform transition-transform duration-300 ease-in-out will-change-transform",
+          translateClass
         )}
-        aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
         {/* Mobile close button */}
         <button
-          onClick={toggleSidebar}
+          onClick={closeSidebar}
           aria-label="Close sidebar"
-          className="absolute top-3 right-3 z-60 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700 md:hidden"
+          className="absolute top-3 right-3 z-[10000] w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-700 md:hidden"
         >
           <HiOutlineMenu className="w-5 h-5" />
         </button>
@@ -141,7 +135,10 @@ export default function Sidebar() {
                       query.project === p ? "pill-selected" : ""
                     )}
                   >
-                    <span className="w-3 h-3 rounded-full" style={{ background: "#a78bfa" }} />
+                    <span
+                      className="w-3 h-3 rounded-full"
+                      style={{ background: "#a78bfa" }}
+                    />
                     <span className="truncate">{p}</span>
                   </Link>
                 ))
