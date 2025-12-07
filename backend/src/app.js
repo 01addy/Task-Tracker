@@ -14,7 +14,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-
 const raw = process.env.CLIENT_ORIGINS || process.env.FRONTEND_ORIGIN || "";
 
 const ALLOWED_ORIGINS = raw
@@ -22,33 +21,27 @@ const ALLOWED_ORIGINS = raw
   .map((s) => s.trim().replace(/\/+$/, ""))
   .filter(Boolean);
 
-
 if (ALLOWED_ORIGINS.length === 0) {
   ALLOWED_ORIGINS.push("http://localhost:3000");
 }
 
 const corsOptions = {
   origin: function (origin, callback) {
-    
     if (!origin) return callback(null, true);
-
     const normalizedOrigin = origin.replace(/\/+$/, "");
     if (ALLOWED_ORIGINS.includes(normalizedOrigin)) {
       return callback(null, true);
     }
     return callback(new Error(`CORS policy does not allow origin ${origin}`), false);
   },
-  credentials: true, 
+  credentials: true,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
   optionsSuccessStatus: 204,
 };
 
-
 app.use(cors(corsOptions));
-
-app.options("*", cors(corsOptions));
-
+app.options("/*", cors(corsOptions));
 
 app.get("/health", (req, res) => res.json({ ok: true, message: "Server running" }));
 
@@ -69,7 +62,6 @@ app.get("/test-mail", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// global error handler 
 app.use(errorHandler);
 
 export default app;
