@@ -8,11 +8,11 @@ const TaskSchema = new mongoose.Schema(
     dueDate: { type: Date },
     priority: { type: String, enum: ["low", "medium", "high"], default: "low" },
     status: { type: String, enum: ["todo", "inprogress", "done"], default: "todo" },
-    completed: { type: Boolean, default: false },           // new: explicit completed flag
-    tags: { type: [String], default: [] },                  // new: tags array
-    project: { type: String, default: "" },                 // new: project/category
+    completed: { type: Boolean, default: false },           
+    tags: { type: [String], default: [] },                  
+    project: { type: String, default: "" },                 
     reminderSent: { type: Boolean, default: false },
-    reminderOffsetMinutes: { type: Number, default: 60 }, // remind 60 minutes before by default
+    reminderOffsetMinutes: { type: Number, default: 60 }, 
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
