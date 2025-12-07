@@ -31,7 +31,6 @@ export default function Sidebar() {
   const closeSidebar = useUiStore((s) => s.closeSidebar);
   const toggleSidebar = useUiStore((s) => s.toggleSidebar);
 
-  
   const tasks = useTasks((s) => s.tasks);
 
   const [mounted, setMounted] = useState(false);
@@ -53,11 +52,11 @@ export default function Sidebar() {
 
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
+  // translate logic: default hidden on mobile, visible on desktop
   const translateClass = mounted
-    ? (isSidebarOpen ? "translate-x-0 md:block" : "-translate-x-full md:hidden")
-    : "md:block";
+    ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full")
+    : "-translate-x-full";
 
-  
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks) || tasks.length === 0) return [];
     const seen = new Set();
@@ -79,7 +78,7 @@ export default function Sidebar() {
         <div
           onClick={closeSidebar}
           className={classNames(
-            "fixed inset-0 bg-black/30 z-30 transition-opacity md:hidden",
+            "fixed inset-0 bg-black/30 z-30 transition-opacity duration-300 ease-in-out md:hidden",
             { "opacity-100 pointer-events-auto": showOverlay, "opacity-0 pointer-events-none": !showOverlay }
           )}
           aria-hidden={!showOverlay}
@@ -88,10 +87,8 @@ export default function Sidebar() {
 
       <aside
         className={classNames(
-         
-          "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-40 transform transition-transform duration-200 ease-in-out",
-          
-          "md:static md:mt-12",
+          "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-40 transform transition-transform duration-300 ease-in-out will-change-transform",
+          "md:static md:mt-12 md:translate-x-0",
           translateClass
         )}
         aria-hidden={mounted ? (isMobile ? !isSidebarOpen : !isSidebarOpen) : undefined}
@@ -122,7 +119,6 @@ export default function Sidebar() {
               {projects.length === 0 ? (
                 <>
                   <div className="text-sm text-gray-500">No projects yet</div>
-                  
                 </>
               ) : (
                 projects.map((p) => (
