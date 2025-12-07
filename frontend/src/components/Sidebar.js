@@ -31,7 +31,7 @@ export default function Sidebar() {
   const closeSidebar = useUiStore((s) => s.closeSidebar);
   const toggleSidebar = useUiStore((s) => s.toggleSidebar);
 
-  // use tasks to build project list dynamically
+  
   const tasks = useTasks((s) => s.tasks);
 
   const [mounted, setMounted] = useState(false);
@@ -57,7 +57,7 @@ export default function Sidebar() {
     ? (isSidebarOpen ? "translate-x-0 md:block" : "-translate-x-full md:hidden")
     : "md:block";
 
-  // derive unique ordered project names from tasks
+  
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks) || tasks.length === 0) return [];
     const seen = new Set();
@@ -88,9 +88,9 @@ export default function Sidebar() {
 
       <aside
         className={classNames(
-          // fixed on mobile overlay; on md+ the sidebar participates in normal flow
+         
           "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-40 transform transition-transform duration-200 ease-in-out",
-          // IMPORTANT: push sidebar down on md+ so header (sticky) does not get overlapped.
+          
           "md:static md:mt-12",
           translateClass
         )}
