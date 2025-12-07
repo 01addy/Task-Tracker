@@ -53,45 +53,6 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", onResize);
   }, [openSidebar, closeSidebar]);
 
-  // Listen for the event header dispatches (fallback)
-  useEffect(() => {
-    const handler = () => {
-      try {
-        toggleSidebar();
-        console.log("[DEBUG] Sidebar received tasktracker:openSidebar -> toggleSidebar()");
-      } catch (e) {
-        console.warn("[DEBUG] Sidebar handler toggleSidebar failed", e);
-      }
-    };
-    window.addEventListener("tasktracker:openSidebar", handler);
-    return () => window.removeEventListener("tasktracker:openSidebar", handler);
-  }, [toggleSidebar]);
-
-  // debug: log initial and subsequent state values
-  useEffect(() => {
-    console.log("[DEBUG] Sidebar mounted. isSidebarOpen =", isSidebarOpen, "isMobile =", isMobile);
-  }, []);
-
-  // debug: watch state changes and computed style
-  useEffect(() => {
-    setTimeout(() => {
-      const aside = document.querySelector("aside");
-      const cs = aside ? getComputedStyle(aside) : null;
-      console.log(
-        "[DEBUG] isSidebarOpen:",
-        isSidebarOpen,
-        "isMobile:",
-        isMobile,
-        "computed transform:",
-        cs ? cs.transform : null,
-        "zIndex:",
-        cs ? cs.zIndex : null,
-        "aside exists:",
-        !!aside
-      );
-    }, 50);
-  }, [isSidebarOpen, isMobile]);
-
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
   const translateClass = mounted ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "-translate-x-full";
@@ -125,7 +86,6 @@ export default function Sidebar() {
           translateClass,
           "md:top-12 md:h-[calc(100vh-3rem)]"
         )}
-        aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
         {/* Mobile close button */}
         <button
