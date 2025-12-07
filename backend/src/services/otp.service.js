@@ -12,7 +12,7 @@ const RESEND_LIMIT_PER_HOUR = 3;
 const genNumericOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 export const createAndSendOtp = async (email, purpose = "signup") => {
-  // check resend limit count in past hour
+  // check resend limit count
   const since = new Date(Date.now() - 60 * 60 * 1000);
   const recentCount = await Otp.countDocuments({ email, purpose, createdAt: { $gte: since } });
   if (recentCount >= RESEND_LIMIT_PER_HOUR) {
@@ -23,7 +23,7 @@ export const createAndSendOtp = async (email, purpose = "signup") => {
   const otpHash = await bcrypt.hash(otp, SALT_ROUNDS);
   const expiresAt = new Date(Date.now() + OTP_EXPIRE_MIN * 60 * 1000);
 
-  // delete older OTPs for same email/purpose (optional)
+
   await Otp.deleteMany({ email, purpose });
 
   await Otp.create({ email, otpHash, purpose, expiresAt });
@@ -55,7 +55,7 @@ export const verifyOtpAndConsume = async (email, otpProvided, purpose = "signup"
     return { ok: false, error: "Invalid OTP" };
   }
 
-  // success: delete otp and return ok
+  
   await Otp.deleteOne({ _id: otpDoc._id });
   return { ok: true };
 };
