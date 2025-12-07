@@ -3,13 +3,11 @@ import { body } from "express-validator";
 
 export const sendOtpValidator = [
   body("email").isEmail().withMessage("Valid email required").normalizeEmail(),
-  // optional purpose check could be added
 ];
 
 export const verifyOtpValidator = [
   body("email").isEmail().withMessage("Valid email required").normalizeEmail(),
   body("otp").isLength({ min: 4 }).withMessage("OTP required"),
-  // password only required for signup or reset when provided
 ];
 
 export const loginValidator = [
