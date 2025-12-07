@@ -2,35 +2,54 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-import cookieParser from "cookie-parser"; 
+import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import { transporter } from "./config/mailer.js";
 
 const app = express();
-
-// security headers
 app.use(helmet());
-
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://task-tracker-five-blush.vercel.app/";
-
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN,   
-    credentials: true,       
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
-  })
-);
-
-// JSON body parser
-app.use(express.json());
-// cookie parser 
-app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(express.json());
+app.use(cookieParser());
 
-// default health check
+
+const raw = process.env.CLIENT_ORIGINS || process.env.FRONTEND_ORIGIN || "";
+
+const ALLOWED_ORIGINS = raw
+  .split(",")
+  .map((s) => s.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
+
+if (ALLOWED_ORIGINS.length === 0) {
+  ALLOWED_ORIGINS.push("http://localhost:3000");
+}
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    
+    if (!origin) return callback(null, true);
+
+    const normalizedOrigin = origin.replace(/\/+$/, "");
+    if (ALLOWED_ORIGINS.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy does not allow origin ${origin}`), false);
+  },
+  credentials: true, 
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
+  optionsSuccessStatus: 204,
+};
+
+
+app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
+
+
 app.get("/health", (req, res) => res.json({ ok: true, message: "Server running" }));
 
 app.get("/test-mail", async (req, res) => {
@@ -50,7 +69,7 @@ app.get("/test-mail", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// global error handler
+// global error handler 
 app.use(errorHandler);
 
 export default app;
