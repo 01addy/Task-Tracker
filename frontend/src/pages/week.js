@@ -31,7 +31,7 @@ export default function WeekPage() {
     }
   };
 
-  // week range in IST (uses locale week start). If you prefer Monday-based weeks, tell me and I'll switch to isoWeek.
+  
   const weekStart = dayjs().tz(IST).startOf("week");
   const weekEnd = dayjs().tz(IST).endOf("week");
 
