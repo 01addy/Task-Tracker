@@ -16,7 +16,6 @@ export default function Header() {
   }));
 
   const toggleSidebar = useUiStore((s) => s.toggleSidebar);
-  const openSidebar = useUiStore((s) => s.openSidebar);
   const closeSidebar = useUiStore((s) => s.closeSidebar);
 
   const [mounted, setMounted] = useState(false);
@@ -31,38 +30,10 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="flex items-center gap-3">
-        {/* SINGLE hamburger button */}
         <button
           type="button"
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-          onClick={() => {
-            // DEBUG: log click + toggle + store preview
-            try {
-              console.log("[DEBUG] Header hamburger clicked - before toggle");
-            } catch (e) {}
-
-            try {
-              toggleSidebar();
-              console.log("[DEBUG] toggleSidebar() called.");
-            } catch (e) {
-              console.error("[DEBUG] toggleSidebar() threw:", e);
-            }
-
-            try {
-              // Zustand hook function exposes getState
-              const st = typeof useUiStore.getState === "function" ? useUiStore.getState() : null;
-              console.log("[DEBUG] store state after toggle:", st);
-            } catch (e) {
-              console.warn("[DEBUG] cannot read store.getState()", e);
-            }
-
-            try {
-              window.dispatchEvent(new CustomEvent("tasktracker:openSidebar"));
-              console.log("[DEBUG] dispatched event tasktracker:openSidebar");
-            } catch (e) {
-              console.warn("[DEBUG] dispatch event failed", e);
-            }
-          }}
+          onClick={() => toggleSidebar()}
           aria-label="Toggle menu"
           title="Toggle menu"
         >
