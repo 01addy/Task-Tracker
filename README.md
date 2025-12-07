@@ -1,125 +1,94 @@
-Task Tracker — Full-Stack Productivity App
+# Task Tracker — Full-Stack Productivity App
 
-A modern, full-stack task management system built with Next.js (frontend), Node.js + Express (backend), MongoDB Atlas, JWT authentication, OTP email verification, task scheduling, reminders, CSV export, and real-time updates using Socket.io.
+A modern, full-stack task management system built with Next.js (frontend), Node.js + Express (backend), MongoDB Atlas, OTP-based authentication, JWT token system, task scheduling, email reminders, CSV export, and real-time updates using Socket.io.
 
-This repository contains both the frontend and backend, ready for deployment with CI/CD.
+This is a modern full-stack task management system built using:
 
-🚀 Features
-🔐 Authentication & Security
+- **Next.js (Frontend)**
+- **Node.js + Express (Backend)**
+- **MongoDB Atlas**
+- **OTP-based authentication**
+- **JWT (Access + Refresh Tokens)**
+- **Email reminders**
+- **CSV export**
+- **Real-time updates (Socket.io)**
 
-Signup with OTP verification
+This repository includes **both frontend and backend**, structured for clean development and ready for CI/CD deployment.
 
-Login with JWT Access + Refresh Tokens
+---
 
-Secure token rotation
+## 🚀 Features
 
-Logout (invalidates refresh token)
+### 🔐 Authentication & Security
+- Signup with **OTP email verification**
+- Login with **JWT Access Token + Refresh Token**
+- Secure **token rotation**
+- Logout (refresh token invalidated)
+- Forgot password → **OTP reset flow**
+- Rate limiting, Helmet, CORS
+- Secure cookies + bcrypt password hashing
 
-Forgot password → OTP-based reset
+---
 
-Rate limiting, Helmet, CORS, secure cookies
+### 📝 Task Management
+- Create, update, delete tasks
+- Task attributes:
+  - Title
+  - Description
+  - Due Date (in IST)
+  - Priority (LOW / MEDIUM / HIGH)
+  - Status (Completed / Pending)
+  - Project name
+  - Tags
+- Toggle completion
+- Smart filters:
+  - **All Tasks**
+  - **Today**
+  - **This Week**
+  - **Completed**
+  - **By Project**
+- Export tasks as **CSV**
 
-Password hashing using bcryptjs
+---
 
-📝 Task Management
+### 📅 Automation & Reminders
+- Automatic reminder emails for:
+  - Overdue tasks  
+  - Daily upcoming tasks  
+- Powered by **node-cron**
+- Nodemailer SMTP email delivery system
 
-Create, update, delete tasks
+---
 
-Fields include:
+## 🎨 Frontend (Next.js)
+- Next.js Pages Router
+- Fully responsive UI
+- Beautiful dark/light themes
+- Sticky header + dynamic sidebar
+- Zustand for global state management
+- Axios for API communication
+- Day.js for date/time operations
+- Polished UI components & task cards
 
-Title
+---
 
-Description
+## 🛠 Backend (Node.js + Express)
+- Clean folder structure (Routes → Controllers → Services → Models)
+- MongoDB + Mongoose
+- OTP generation + secure verification
+- JWT authentication (access + refresh)
+- Email sending via Nodemailer
+- CSV export module
+- Cron jobs for reminders
+- Winston-based logging
+- File upload ready (multer)
+- API built for scalability & reliability
 
-Due Date (IST timezone)
+---
 
-Priority (Low / Medium / High)
+## 📂 Project Structure
 
-Status (To Do / In Progress / Done)
-
-Project / Category
-
-Tags
-
-Task completion toggle
-
-Task filtering:
-
-All Tasks
-
-Today’s Tasks
-
-This Week's Tasks
-
-Completed Tasks
-
-By Project Name
-
-CSV Export for task history
-
-📅 Reminders & Automation
-
-Cron-job powered email reminders for upcoming or overdue tasks
-
-Daily scheduled job powered by node-cron
-
-Email notifications using Nodemailer (SMTP)
-
-⚡ Frontend (Next.js)
-
-Built with Next.js 13 (pages directory)
-
-Fully responsive UI
-
-Light/Dark mode
-
-Sidebar with project grouping
-
-Task cards with visual priority indicators
-
-Task modal for editing
-
-New Task floating action button
-
-Authentication pages (Login, Signup, Forgot Password)
-
-State management using Zustand
-
-Date handling with Day.js + timezone
-
-🛠 Backend (Node.js + Express)
-
-Modular Express architecture
-
-Controllers, services, middleware, validation
-
-Routes grouped under /api/...
-
-Token refresh flow
-
-OTP generation & validation
-
-MongoDB Atlas integration
-
-Socket.io real-time push events
-
-Cron jobs stored in /jobs folder
-
-Email templates & SMTP config
-
-🗄 Database (MongoDB Atlas)
-
-Collections:
-
-users
-
-tasks
-
-refresh_tokens
-
-Indexes applied for performance.
-
-📂 Folder Structure
+```
 task-tracker/
 │
 ├── backend/
@@ -127,15 +96,15 @@ task-tracker/
 │   │   ├── app.js
 │   │   ├── server.js
 │   │   ├── config/
-│   │   ├── models/
 │   │   ├── controllers/
+│   │   ├── models/
 │   │   ├── routes/
+│   │   ├── jobs/
 │   │   ├── middlewares/
-│   │   ├── utils/
-│   │   └── jobs/
+│   │   └── utils/
 │   ├── package.json
 │   ├── .env.example
-│   └── README.md (same root readme)
+│   └── README.md
 │
 ├── frontend/
 │   ├── src/
@@ -145,152 +114,132 @@ task-tracker/
 │   │   ├── lib/
 │   │   └── styles/
 │   ├── public/
-│   ├── package.json
-│   └── README.md
+│   └── package.json
 │
-└── README.md  (you are reading this)
+└── README.md
+```
 
-⚙️ Environment Variables
-Backend .env
+---
+
+## ⚙️ Environment Variables
+
+### 📌 Backend `.env`
+```
 NODE_ENV=development
 PORT=4000
 
-MONGODB_URI=YOUR_MONGO_ATLAS_URI
+MONGODB_URI=YOUR_MONGODB_ATLAS_URI
 
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false
-SMTP_USER=you@gmail.com
-SMTP_PASS=YOUR_APP_PASSWORD
+SMTP_USER=your@gmail.com
+SMTP_PASS=YOUR_SMTP_APP_PASSWORD
 SMTP_FROM="TaskTracker <no-reply@yourdomain.com>"
 
-JWT_ACCESS_SECRET=long_secure_random_string
-JWT_REFRESH_SECRET=long_secure_random_string
+JWT_ACCESS_SECRET=SUPER_SECRET_ACCESS_KEY
+JWT_REFRESH_SECRET=SUPER_SECRET_REFRESH_KEY
 
 ACCESS_TOKEN_TTL=15m
 REFRESH_TOKEN_TTL=7d
+```
 
-Frontend .env.local
+### 📌 Frontend `.env.local`
+```
 NEXT_PUBLIC_API_BASE=http://localhost:4000
+```
 
-🛠 Running the Project Locally
-1️⃣ Start Backend
+---
+
+## 🧪 Running Locally
+
+### ▶ Backend
+```
 cd backend
 npm install
 npm run dev
+```
 
-2️⃣ Start Frontend
+### ▶ Frontend
+```
 cd frontend
 npm install
 npm run dev
+```
 
+### Local URLs
+- Frontend → http://localhost:3000  
+- Backend → http://localhost:4000  
 
-App will run at:
-👉 Frontend: http://localhost:3000
+---
 
-👉 Backend: http://localhost:4000
+## 🌐 API Endpoints
 
-📦 API Overview
-Auth Routes (/api/auth)
+### 🔐 Auth ( `/api/auth` )
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/send-otp` | Send OTP for signup/reset |
+| POST | `/verify-otp` | Verify OTP (signup/reset) |
+| POST | `/login` | Login user |
+| POST | `/logout` | Logout user |
+| POST | `/refresh` | Refresh access token |
 
-POST /send-otp
+### ✅ Tasks ( `/api/tasks` )
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/` | Create task |
+| GET | `/` | Fetch tasks |
+| GET | `/:id` | Fetch one task |
+| PUT | `/:id` | Update task |
+| DELETE | `/:id` | Delete task |
+| GET | `/export/csv` | Export all tasks to CSV |
 
-POST /verify-otp
+---
 
-POST /login
+## 🧰 Tech Stack
 
-POST /logout
+### Frontend
+- Next.js  
+- TailwindCSS  
+- Zustand  
+- Axios  
+- Day.js  
 
-POST /refresh
+### Backend
+- Node.js  
+- Express  
+- MongoDB  
+- Mongoose  
+- Nodemailer  
+- JWT  
+- Cron  
+- Winston  
 
-POST /reset-password
+---
 
-Task Routes (/api/tasks)
+## ☁ Deployment Options
 
-POST / → Create
+### Frontend  
+- **Vercel (Recommended)**  
+- Netlify  
 
-GET / → List
+### Backend  
+- **Google Cloud Run**  
+- Render  
+- Railway  
+- DigitalOcean  
 
-GET /:id
+### Database  
+- **MongoDB Atlas**
 
-PUT /:id
+---
 
-DELETE /:id
+## 👨‍💻 Author
+**Aditya**  
+Engineering Student — IMS Engineering College  
+Passionate about building production-ready applications.
 
-GET /export/csv
+---
 
-📌 Tech Stack
-Frontend
-
-Next.js 13
-
-Zustand
-
-TailwindCSS
-
-Day.js
-
-React-Hot-Toast
-
-HeadlessUI
-
-Axios
-
-Backend
-
-Node.js
-
-Express
-
-MongoDB + Mongoose
-
-Nodemailer
-
-Node-Cron
-
-JWT
-
-Bcrypt
-
-Winston logging
-
-Multer upload
-
-🚀 Deployment Options
-Frontend (Next.js)
-
-Vercel (recommended)
-
-Netlify
-
-Backend (Node.js)
-
-Google Cloud Run
-
-Render
-
-Railway
-
-AWS EC2
-
-DigitalOcean App Platform
-
-Database
-
-MongoDB Atlas
-
-🧪 Testing
-
-Backend uses Jest + Supertest for integration tests:
-
-npm test
-
-🧑‍💻 Author
-
-Aditya
-Engineering Student, IMS Engineering College
-Passionate about full-stack development and product engineering.
-
-📜 License
-
-This project is licensed under the MIT License.
+## 📜 License
+Released under **MIT License**.
