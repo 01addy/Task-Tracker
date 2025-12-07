@@ -41,20 +41,22 @@ export default function Sidebar() {
     const onResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      if (!mobile) {
+      // open on desktop by default, close on mobile
+      if (mobile) {
+        closeSidebar();
+      } else {
         openSidebar();
       }
     };
     onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [openSidebar]);
+  }, [openSidebar, closeSidebar]);
 
+  // fallback event listener so header can force-open the sidebar
   useEffect(() => {
     const handler = () => {
-      if (typeof openSidebar === "function") {
-        openSidebar();
-      }
+      if (typeof openSidebar === "function") openSidebar();
     };
     window.addEventListener("tasktracker:openSidebar", handler);
     return () => window.removeEventListener("tasktracker:openSidebar", handler);
@@ -62,9 +64,8 @@ export default function Sidebar() {
 
   const showOverlay = mounted && isMobile && isSidebarOpen;
 
-  const translateClass = mounted
-    ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full")
-    : "-translate-x-full";
+  // visibility controlled by isSidebarOpen for all breakpoints
+  const translateClass = mounted ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : "-translate-x-full";
 
   const projects = React.useMemo(() => {
     if (!Array.isArray(tasks) || tasks.length === 0) return [];
@@ -98,11 +99,11 @@ export default function Sidebar() {
 
       <aside
         className={classNames(
+          // control visibility via transform for all sizes
           "fixed left-0 top-0 h-full w-72 p-4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 z-40 transform transition-transform duration-300 ease-in-out will-change-transform",
-          "md:static md:mt-12 md:translate-x-0",
           translateClass
         )}
-        aria-hidden={mounted ? (isMobile ? !isSidebarOpen : !isSidebarOpen) : undefined}
+        aria-hidden={mounted ? !isSidebarOpen : undefined}
       >
         <button
           onClick={() => {
