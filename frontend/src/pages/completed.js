@@ -15,14 +15,14 @@ export default function CompletedPage() {
 
   const handleToggle = async (task) => {
     try {
-      // toggle completed off if user clicks
+      
       await updateTask(task._id, { completed: !task.completed });
     } catch (e) {
       console.error(e);
     }
   };
 
-  // completed tasks: prefer completed flag; fallback to status === 'done'
+  
   const completed = (tasks || []).filter((t) => t.completed || t.status === "done");
 
   return (
