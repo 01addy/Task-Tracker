@@ -7,6 +7,7 @@ import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import { transporter } from "./config/mailer.js";
+import { smtpTcpCheck } from "./debug/smtp-check.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get("/test-mail", async (req, res) => {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
+app.get("/debug/smtp-tcp", smtpTcpCheck);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
