@@ -14,19 +14,10 @@ app.set("trust proxy", 1);
 
 app.use(helmet());
 
-const rawOrigins = process.env.CLIENT_ORIGIN || "http://localhost:3000";
-const allowedOrigins = rawOrigins.split(",").map(s => s.trim()).filter(Boolean);
-
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
-      if (allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(null, false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+    origin: true,
+    credentials: true
   })
 );
 
