@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  // mounted prevents SSR mismatch: we don't read/write localStorage until client mount
+  
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState("light");
 
@@ -18,7 +18,7 @@ export default function ThemeToggle() {
         document.documentElement.classList.remove("dark");
       }
     } catch (e) {
-      // ignore
+      
     }
   }, []);
 
@@ -31,7 +31,7 @@ export default function ThemeToggle() {
     } catch (e) {}
   }, [theme, mounted]);
 
-  // don't render different icon at SSR -> client mismatch; render nothing until mounted
+  
   if (!mounted) {
     return (
       <button className="p-2 rounded" aria-hidden="true" />
