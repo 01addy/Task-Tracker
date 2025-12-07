@@ -4,7 +4,7 @@ import { getAccessToken, setAccessToken, clearAccessToken } from "./auth";
 
 // base should point to server root (no trailing /api)
 // calls use /api/... paths so they resolve to `${API_BASE}/api/...`
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://task-tracker-3eze.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE,
