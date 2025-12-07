@@ -31,7 +31,7 @@ export default function CreateTask() {
       setTagInput("");
       return;
     }
-    setTags((s) => [...s, t].slice(0, 10)); // limit to 10 tags
+    setTags((s) => [...s, t].slice(0, 10)); // limit 10 tags
     setTagInput("");
   };
 
@@ -43,7 +43,7 @@ export default function CreateTask() {
       addTagFromInput();
     }
     if (e.key === "Backspace" && !tagInput && tags.length) {
-      // remove last tag when backspace on empty input
+      
       setTags((s) => s.slice(0, -1));
     }
   };
