@@ -41,7 +41,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 app.get("/health", (req, res) => res.json({ ok: true, message: "Server running" }));
 
