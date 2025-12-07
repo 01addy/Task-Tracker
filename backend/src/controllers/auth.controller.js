@@ -29,7 +29,7 @@ function setRefreshCookie(res, token, ttlSeconds) {
     secure,
     sameSite: secure ? "none" : "lax",
     maxAge: ttlSeconds * 1000,
-    path: "/api/auth", // narrow path (optional) — frontend posts to /api/auth/refresh
+    path: "/api/auth", 
   });
 }
 
@@ -79,7 +79,7 @@ export const verifyOtp = async (req, res) => {
       // send welcome mail async
       sendWelcomeEmail(user.email, user.name).catch((e) => console.error("Welcome email error", e));
 
-      // tokens: create jti for refresh token and include jti in payload
+      
       const refreshJti = crypto.randomBytes(16).toString("hex");
       const refreshToken = signRefreshToken({ sub: user._id.toString(), email: user.email, jti: refreshJti });
 
@@ -93,7 +93,7 @@ export const verifyOtp = async (req, res) => {
 
       const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email });
 
-      // set httpOnly refresh cookie
+      
       setRefreshCookie(res, refreshToken, refreshTtlSeconds);
 
       return res.status(201).json({
@@ -110,7 +110,7 @@ export const verifyOtp = async (req, res) => {
       if (!user) return res.status(404).json({ ok: false, error: "User not found" });
       user.passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
       await user.save();
-      // optionally notify
+      
       sendWelcomeEmail(user.email, user.name).catch(() => {});
       return res.json({ ok: true, message: "Password reset successful" });
     }
@@ -149,10 +149,10 @@ export const login = async (req, res) => {
 
     const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email });
 
-    // set refresh token as httpOnly cookie (frontend will call /refresh with credentials)
+    
     setRefreshCookie(res, refreshToken, refreshTtlSeconds);
 
-    // return access token and user so frontend can show profile immediately
+    
     return res.json({ ok: true, accessToken, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     console.error("login error:", err);
@@ -165,11 +165,11 @@ export const refresh = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ ok: false, errors: errors.array() });
 
-    // accept refresh token from body or cookie
+    // accept refresh token from body
     const providedToken = req.body?.refreshToken || req.cookies?.[REFRESH_COOKIE_NAME];
     if (!providedToken) return res.status(400).json({ ok: false, error: "refreshToken required" });
 
-    // verify signature and extract jti and sub
+    
     let payload;
     try {
       payload = verifyRefreshToken(providedToken);
@@ -181,11 +181,11 @@ export const refresh = async (req, res) => {
     const userId = payload.sub;
     if (!jti || !userId) return res.status(401).json({ ok: false, error: "Invalid refresh token" });
 
-    // find persisted refresh token
+    
     const stored = await RefreshToken.findOne({ jti, userId });
     if (!stored) return res.status(401).json({ ok: false, error: "Refresh token revoked or not found" });
 
-    // rotate: delete old stored token and issue new
+    
     await RefreshToken.deleteOne({ _id: stored._id });
 
     const refreshJti = crypto.randomBytes(16).toString("hex");
@@ -199,7 +199,7 @@ export const refresh = async (req, res) => {
 
     const accessToken = signAccessToken({ sub: userId, email: payload.email });
 
-    // set rotated refresh token in cookie (overwrite previous)
+    
     setRefreshCookie(res, newRefreshToken, refreshTtlSeconds);
 
     return res.json({ ok: true, accessToken, refreshToken: newRefreshToken });
@@ -211,20 +211,20 @@ export const refresh = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    // accept refresh token from body or cookie
+    
     const providedToken = req.body?.refreshToken || req.cookies?.[REFRESH_COOKIE_NAME];
     if (!providedToken) {
-      // still clear cookie to be safe
+      
       res.clearCookie(REFRESH_COOKIE_NAME, { path: "/api/auth" });
       return res.status(400).json({ ok: false, error: "refreshToken required" });
     }
 
-    // verify token to extract jti
+    
     let payload;
     try {
       payload = verifyRefreshToken(providedToken);
     } catch (err) {
-      // clear cookie anyway
+      
       res.clearCookie(REFRESH_COOKIE_NAME, { path: "/api/auth" });
       return res.status(400).json({ ok: false, error: "Invalid token" });
     }
@@ -250,7 +250,7 @@ export const logout = async (req, res) => {
 // NEW: get current user from access token
 export const me = async (req, res) => {
   try {
-    // Expect Authorization: Bearer <token>
+    
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) return res.status(401).json({ ok: false, error: "Missing Authorization header" });
 
