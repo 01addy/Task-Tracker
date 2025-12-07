@@ -15,7 +15,7 @@ export default function Header() {
     logout: s.logout,
   }));
 
-  // <-- use toggleSidebar so the left hamburger toggles open/close
+  // toggleSidebar toggles open/close
   const toggleSidebar = useUiStore((s) => s.toggleSidebar);
   const closeSidebar = useUiStore((s) => s.closeSidebar);
 
@@ -29,7 +29,7 @@ export default function Header() {
   }, [router, closeSidebar]);
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
+    <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-60">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -62,7 +62,6 @@ export default function Header() {
               {user.name ? user.name.split(" ").map(n => n[0]).slice(0,2).join("") : (user.email ? user.email[0].toUpperCase() : "U")}
             </div>
 
-            {/* Right-side: only logout icon + optional text on >= sm */}
             <button
               onClick={async () => { await logout(); router.replace("/login"); }}
               className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-100 hover:underline whitespace-nowrap"
