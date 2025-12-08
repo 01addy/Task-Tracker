@@ -48,7 +48,7 @@ This repository includes **both frontend and backend**, structured for clean dev
   - **This Week**
   - **Completed**
   - **By Project**
-- Export tasks as **CSV**
+  
 
 ---
 
@@ -57,7 +57,7 @@ This repository includes **both frontend and backend**, structured for clean dev
   - Overdue tasks  
   - Daily upcoming tasks  
 - Powered by **node-cron**
-- Nodemailer SMTP email delivery system
+- SendGrid email delivery system
 
 ---
 
@@ -129,7 +129,7 @@ PORT=4000
 
 MONGODB_URI=YOUR_MONGODB_ATLAS_URI
 
-SENDGRID_API_KEY
+SENDGRID_API_KEY= YOUR_API_KEY
 JWT_ACCESS_SECRET=SUPER_SECRET_ACCESS_KEY
 JWT_REFRESH_SECRET=SUPER_SECRET_REFRESH_KEY
 
