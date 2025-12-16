@@ -1,20 +1,19 @@
 // src/validators/auth.validator.js
 import { body } from "express-validator";
 
-export const sendOtpValidator = [
+export const registerValidator = [
+  body("name").optional().isString(),
   body("email").isEmail().withMessage("Valid email required").normalizeEmail(),
-];
-
-export const verifyOtpValidator = [
-  body("email").isEmail().withMessage("Valid email required").normalizeEmail(),
-  body("otp").isLength({ min: 4 }).withMessage("OTP required"),
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
 ];
 
 export const loginValidator = [
   body("email").isEmail().withMessage("Valid email required").normalizeEmail(),
-  body("password").isString().notEmpty().withMessage("Password required"),
+  body("password").notEmpty().withMessage("Password required"),
 ];
 
 export const refreshValidator = [
-  body("refreshToken").isString().notEmpty().withMessage("refreshToken required"),
+  body("refreshToken").optional().isString(),
 ];
