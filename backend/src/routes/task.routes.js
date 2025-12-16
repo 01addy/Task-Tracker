@@ -7,7 +7,6 @@ import {
   getTask,
   updateTask,
   deleteTask,
-  exportTasksCsv,
 } from "../controllers/task.controller.js";
 import {
   createTaskValidator,
@@ -18,11 +17,9 @@ import { validationResult } from "express-validator";
 
 const router = express.Router();
 
-
 const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-   
     const mapped = errors.array().map((e) => ({ field: e.param, msg: e.msg }));
     return res.status(400).json({ ok: false, errors: mapped });
   }
@@ -37,14 +34,9 @@ router.post("/", createTaskValidator, handleValidation, createTask);
 // List
 router.get("/", listTasksValidator, handleValidation, listTasks);
 
-// CSV export
-router.get("/export/csv", exportTasksCsv);
-
 // Get single
 router.get("/:id", async (req, res, next) => {
-  // validate id param
   const { id } = req.params;
-  // lightweight check
   if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
     return res.status(400).json({ ok: false, error: "Invalid task id" });
   }
