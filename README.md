@@ -1,33 +1,41 @@
 # Task Tracker — Full-Stack Productivity App
 
-A modern, full-stack task management system built with Next.js (frontend), Node.js + Express (backend), MongoDB Atlas, OTP-based authentication, JWT token system, task scheduling, email reminders, CSV export, and real-time updates using Socket.io.
+A clean, full-stack task management system built with **Next.js (frontend)**, **Node.js + Express (backend)**, and **MongoDB Atlas**, featuring **JWT-based authentication** and secure task management.
 
-Website URL - https://task-tracker-five-blush.vercel.app/
+Website URL:  
+https://task-tracker-five-blush.vercel.app/
 
-Tech Stack Used:
+---
 
-- **Next.js (Frontend)**
-- **Node.js + Express (Backend)**
-- **MongoDB Atlas**
-- **OTP-based authentication**
-- **JWT (Access + Refresh Tokens)**
-- **Email reminders**
-- **Real-time updates (Socket.io)**
+## 🧱 Tech Stack
 
-This repository includes **both frontend and backend**, structured for clean development and ready for CI/CD deployment.
+### Frontend
+- **Next.js (Pages Router)**
+- Tailwind CSS
+- Zustand (state management)
+- Axios
+- Day.js (date handling)
+
+### Backend
+- **Node.js + Express**
+- MongoDB Atlas
+- Mongoose
+- JWT (Access + Refresh Tokens)
+- bcrypt
+- Helmet, CORS, Rate Limiting
 
 ---
 
 ## 🚀 Features
 
 ### 🔐 Authentication & Security
-- Signup with **OTP email verification**
-- Login with **JWT Access Token + Refresh Token**
-- Secure **token rotation**
-- Logout (refresh token invalidated)
-- Forgot password → **OTP reset flow**
-- Rate limiting, Helmet, CORS
-- Secure cookies + bcrypt password hashing
+- Email + password signup
+- Login using JWT access token
+- Refresh token rotation
+- Secure logout (refresh token invalidation)
+- Protected routes using middleware
+- Password hashing using bcrypt
+- HTTP-only cookies for refresh tokens
 
 ---
 
@@ -36,52 +44,41 @@ This repository includes **both frontend and backend**, structured for clean dev
 - Task attributes:
   - Title
   - Description
-  - Due Date (in IST)
-  - Priority (LOW / MEDIUM / HIGH)
-  - Status (Completed / Pending)
+  - Due Date (IST support)
+  - Priority (Low / Medium / High)
+  - Completion status
   - Project name
   - Tags
-- Toggle completion
-- Smart filters:
-  - **All Tasks**
-  - **Today**
-  - **This Week**
-  - **Completed**
-  - **By Project**
-  
-
----
-
-### 📅 Automation & Reminders
-- Automatic reminder emails for:
-  - Overdue tasks  
-  - Daily upcoming tasks  
-- Powered by **node-cron**
-- SendGrid email delivery system
+- Paginated task listing
+- Search by title or description
+- User-specific task isolation
 
 ---
 
 ## 🎨 Frontend (Next.js)
-- Next.js Pages Router
 - Fully responsive UI
-- Beautiful dark/light themes
-- Sticky header + dynamic sidebar
-- Zustand for global state management
-- Axios for API communication
-- Day.js for date/time operations
-- Polished UI components & task cards
+- Dark / light mode support
+- Authentication pages:
+  - Signup
+  - Login
+- Protected dashboard routes
+- Clean, modern UI components
+- Axios-based API integration
+- Zustand-based auth state
 
 ---
 
 ## 🛠 Backend (Node.js + Express)
-- Clean folder structure (Routes → Controllers → Services → Models)
-- MongoDB + Mongoose
-- OTP generation + secure verification
-- JWT authentication (access + refresh)
-- Email sending via SendGrid
-- Cron jobs for reminders
-- Winston-based logging
-- API built for scalability & reliability
+- Modular folder structure:
+  - Routes
+  - Controllers
+  - Models
+  - Middlewares
+  - Utils
+- MongoDB with Mongoose schemas
+- JWT-based authentication
+- Refresh token persistence
+- Centralized error handling
 
 ---
 
@@ -129,7 +126,6 @@ PORT=4000
 
 MONGODB_URI=YOUR_MONGODB_ATLAS_URI
 
-SENDGRID_API_KEY= YOUR_API_KEY
 JWT_ACCESS_SECRET=SUPER_SECRET_ACCESS_KEY
 JWT_REFRESH_SECRET=SUPER_SECRET_REFRESH_KEY
 
@@ -171,8 +167,7 @@ npm run dev
 ### 🔐 Auth ( `/api/auth` )
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/send-otp` | Send OTP for signup/reset |
-| POST | `/verify-otp` | Verify OTP (signup/reset) |
+| POST | `/register` | Register User |
 | POST | `/login` | Login user |
 | POST | `/logout` | Logout user |
 | POST | `/refresh` | Refresh access token |
@@ -185,7 +180,6 @@ npm run dev
 | GET | `/:id` | Fetch one task |
 | PUT | `/:id` | Update task |
 | DELETE | `/:id` | Delete task |
-| GET | `/export/csv` | Export all tasks to CSV |
 
 ---
 
@@ -203,7 +197,6 @@ npm run dev
 - Express  
 - MongoDB  
 - Mongoose  
-- Nodemailer  
 - JWT  
 - Cron  
 - Winston  
@@ -213,14 +206,10 @@ npm run dev
 ## ☁ Deployment Options
 
 ### Frontend  
-- **Vercel (Recommended)**  
-- Netlify  
+- **Vercel**  
 
 ### Backend  
-- **Google Cloud Run**  
-- Render  
-- Railway  
-- DigitalOcean  
+- **Render**  
 
 ### Database  
 - **MongoDB Atlas**
