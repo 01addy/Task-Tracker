@@ -1,7 +1,6 @@
 // src/server.js
 import env from "./config/env.js";
 import { connectDB } from "./config/db.js";
-import "./config/mailer.js";
 import app from "./app.js";
 import { startReminderJob } from "./jobs/reminder.job.js";
 
