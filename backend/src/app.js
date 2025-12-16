@@ -1,3 +1,4 @@
+// src/app.js
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -16,7 +17,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: true,
-    credentials: true
+    credentials: true,
   })
 );
 
@@ -26,20 +27,6 @@ app.use(morgan("dev"));
 
 app.get("/health", (req, res) => {
   return res.json({ ok: true, message: "Server running" });
-});
-
-app.get("/test-mail", async (req, res) => {
-  try {
-    const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: process.env.SMTP_USER,
-      subject: "Test mail from TaskTracker",
-      text: "This is a test email from TaskTracker server."
-    });
-    return res.json({ ok: true, info });
-  } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message });
-  }
 });
 
 app.use("/api/auth", authRoutes);
