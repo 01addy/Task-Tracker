@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
-import { transporter } from "./config/mailer.js";
 
 const app = express();
 
